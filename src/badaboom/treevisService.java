@@ -9,16 +9,18 @@ public class treevisService {
         this.tree=tree;
         this.view=view;
     }
-    public void setTreeRoot(int val){
-        tree.setVal(val);
+    public treeNode setTreeRoot(int val){
+         tree.setVal(val);
+        return tree;
     }
     public void addNode(treeNode tree,int val){
-        treeNode current=this.tree;
+        treeNode current=tree;
         treeNode newNode =new treeNode(val);
 
         treeNode parent =null;
         if (tree==null){
             tree=newNode;
+            return;
         }
         else {
 
@@ -28,19 +30,25 @@ public class treevisService {
                     current=current.getLeft();
                     if(current==null){
                         parent.setLeft(newNode);
+                        return;
                     }
 
                 }
                 else{
                     current=current.getRight();
-                    if(current==null) parent.setRight(newNode);
+                    if(current==null) {
+                        parent.setRight(newNode);
+                        return;
+                    }
+
                 }
             }
         }
         }
-    public void deleteNode(treeNode tree,int val){
+    public treeNode deleteNode(treeNode tree,int val){
         treeNode current=tree;
         treeNode parent =null;
+        treeNode a=new treeNode();
         if (tree==null){// tree is empty nothing to delete
             System.out.println("tree is empty bro, the fuck are you trying to delete?");
         }
@@ -49,11 +57,12 @@ public class treevisService {
             while (true) {//looking for node to delete
                 if (current.getVal()==val)
                     break;
+                parent=current;
                 if(val< current.getVal()){
                     current=current.getLeft();
                     if(current==null){
                         System.out.println("is you blind? that doesnt exist");
-                        return;
+                        return tree;
                     }
 
 
@@ -62,71 +71,82 @@ public class treevisService {
                     current=current.getRight();
                     if(current==null) {
                         System.out.println("is you blind?"+ val +"doesnt exist");
-                        return;
+                        return tree;
                     }
                 }
 
-                parent=current;
+
             }
 
 
             if (current.getRight()==null && current.getLeft()==null) {//if deleting a leaf
-                if (parent.getLeft()==current) {
-                    parent.setLeft(null);
-                    return;
-                }
-                else {parent.setRight(null);
-                    return;
+                if(parent==null) {
+                    System.out.println("asba");
+                    return parent;
 
                 }
+                else if (parent.getLeft()==current) {
+                    parent.setLeft(null);
+
+                }
+                else {parent.setRight(null);
+
+
+                }
+                return tree;
             }
-            if (current.getRight()==null) {//if there's one child
+            if (current.getRight()==null && current.getLeft()!=null) {//if there's one child
                 if (parent != null) {
                     if (parent.getLeft() == current) {
                         parent.setLeft(current.getLeft());
-                        return;
+
                     } else {
                         parent.setRight(current.getLeft());
-                        return;
+
                     }
+
 
                 } else {
                     tree = tree.getLeft();
                 }
+                return tree;
             }
-            else{
+            else if (current.getLeft()==null && current.getRight()!=null){
                 if(parent!=null) {
                     if (parent.getLeft() == current) {
                         parent.setLeft(current.getRight());
-                        return;
+
                     } else {
                         parent.setRight(current.getRight());
-                        return;
+
                     }
                 }
                 else{
                     tree=tree.getRight();
-                    return;
+
                 }
+                return tree;
             }
             if ((current.getLeft() != null) && (current.getRight() != null)){
                 if (parent==null){
                     treeNode x=searchsmallestnode(current.getRight());
                     current.setVal(x.getVal());
-                    x=null;
-                    return;
+                    x=searchsmallestnode1(current.getRight());
+                    x.setLeft(null);
+
+
                 }
                 else{treeNode omi=searchsmallestnode1(current.getRight());
                     if(omi==current.getRight()){
                     if (current.getRight().getLeft()!=null){
                         current.setVal(current.getRight().getLeft().getVal());
                         current.getRight().setLeft(null);
-                        return;
+
                     }
                     else{
                         current.setVal(current.getRight().getVal());
                         current.setRight(current.getRight().getRight());
-                        return;
+
                     }
 
 
@@ -139,11 +159,12 @@ public class treevisService {
 
                 }
 
-
+                return tree;
             }
 
 
         }
+        return a;
     }
     public treeNode searchTree(treeNode tree,int val){
         treeNode placeholder=tree;
@@ -170,8 +191,10 @@ public class treevisService {
     public treeNode searchsmallestnode1(treeNode tree){
         treeNode omek=tree;
 
-        while((omek.getLeft().getLeft())!= null) {
-            omek = omek.getLeft();
+        while (omek.getLeft()!= null){
+            while ((omek.getLeft().getLeft()) != null) {
+                omek = omek.getLeft();
+            }
         }
         return omek;
     }

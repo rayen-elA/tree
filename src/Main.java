@@ -7,12 +7,12 @@ public class Main {
         treevisView view =new treevisView();
         treeNode tree=new treeNode();
         treevisService object= new treevisService(tree,view);
-        object.setTreeRoot(2);
-        object.addNode(tree,5);
-        object.addNode(tree,3);
-        object.addNode(tree,8);
-        object.addNode(tree,1);
-        object.addNode(tree,0);
+        tree=object.setTreeRoot(3);
+
+
+        object.updateView();
+        System.out.println("\n");
+        tree=object.deleteNode(tree,3);
 
 
 

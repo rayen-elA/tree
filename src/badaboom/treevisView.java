@@ -4,14 +4,17 @@ public class treevisView {
 public treevisView(){}
 
 public void update(treeNode tree) {
-        while(tree!=null)
-        {
-            System.out.println(tree.getVal()+"\n");
-            update(tree.getRight());
-            update(tree.getLeft());
-        }
-
+    if (tree==null){
+        return;
+    }else
+    {
+        System.out.println(tree.getVal()+"  ");
+        update(tree.getRight());
+        update(tree.getLeft());
 
     }
+
+
+}
 
 }
