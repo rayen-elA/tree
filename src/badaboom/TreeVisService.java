@@ -6,22 +6,26 @@ import java.util.List;
 public class TreeVisService {
     public TreeNode tree;
 
-    public TreeVisService(TreeNode tree, TreeVisView view) {
+    public TreeVisService(TreeNode tree) {
         this.tree = tree;
 
     }
 
     public TreeNode setTreeRoot(int val, TreeNode tree) {
-        tree.setVal(val);
-        return tree;
+        TreeNode tree1=new TreeNode(val);
+
+        return tree1;
     }
 
     public void printTree(TreeNode tree) {
+
         if (tree != null) {
             System.out.print(tree.getVal() + " | ");
             printTree(tree.getRight());
             printTree(tree.getLeft());
         }
+        else
+            return;
 
 
     }
@@ -53,40 +57,66 @@ public class TreeVisService {
                 }
             }
         }
-        printTree(tree);
+
+
+        //printTree(tree);
+        System.out.println("");
 
     }
 
 
-    //private void searchTree()
+    private TreeNode searchTree(TreeNode current,int val ){
+        TreeNode parent=null;
+        while (true) {//looking for node to delete
+            if (current.getVal() == val) {
+                System.out.println(3);
+                break;
+            }
+
+            parent = current;
+            if (val < current.getVal()) {
+                current = current.getLeft();
+                if (current == null) {
+                    System.out.println("are you blind?" + val + "doesnt exist");
+                    return parent=null;
+                }
+            } else {
+                current = current.getRight();
+                if (current == null) {
+                    System.out.println("are you blind?" + val + "doesnt exist");
+
+                    return parent=null;
+                }
+            }
+        }
+        return parent;
+    }
     public TreeNode deleteNode(TreeNode tree, int val) {
         TreeNode current = tree;
-        TreeNode parent = null;
+        TreeNode parent=null;
         TreeNode a = new TreeNode();
 
 
         if (tree == null) {// tree is empty nothing to delete
             System.out.println("tree is empty bro, the fuck are you trying to delete?");
         } else {
-            while (true) {//looking for node to delete
-                if (current.getVal() == val) {
-                    break;
+
+            if(searchTree(tree,val)!=null){
+                if (current!=null)
+                {
+                    parent = searchTree(tree, val);
+                    if (parent.getLeft()!= null)
+                        if (parent.getLeft().getVal()==val)
+                            current = parent.getLeft();
+                    else
+                        current = parent.getRight();
                 }
-                parent = current;
-                if (val < current.getVal()) {
-                    current = current.getLeft();
-                    if (current == null) {
-                        System.out.println("are you blind? that doesnt exist");
-                        return tree;
-                    }
-                } else {
-                    current = current.getRight();
-                    if (current == null) {
-                        System.out.println("are you blind?" + val + "doesnt exist");
-                        return tree;
-                    }
-                }
+                else
+                    return tree;
+
+
             }
+
             if (current.getRight() == null && current.getLeft() == null) {//if deleting a leaf
                 if (parent == null) {
                     return null;
@@ -122,6 +152,7 @@ public class TreeVisService {
                 return tree;
             }
             if ((current.getLeft() != null) && (current.getRight() != null)) {//node to delete has 2 children
+                System.out.println("entered delete");
                 if (parent == null) {//node to delete is the root
                     TreeNode x = searchSmallestNode(current.getRight()).getLeft();
                     current.setVal(x.getVal());
@@ -166,9 +197,13 @@ public class TreeVisService {
     public TreeNode searchSmallestNode(TreeNode tree) {
         TreeNode treeNode = tree;
         while (treeNode.getLeft() != null) {
+
             while ((treeNode.getLeft().getLeft()) != null) {
+
                 treeNode = treeNode.getLeft();
             }
+            if(treeNode.getLeft() != null && ((treeNode.getLeft().getLeft()) == null) )
+                break;
         }
         return treeNode;
     }
