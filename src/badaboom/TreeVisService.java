@@ -65,57 +65,53 @@ public class TreeVisService {
     }
 
 
-    private TreeNode searchTree(TreeNode current,int val ){
-        TreeNode parent=null;
+    private Object searchTree(TreeNode current,int val, TreeNode parent){
         while (true) {//looking for node to delete
             if (current.getVal() == val) {
-                System.out.println(3);
-                break;
+                return parent;
             }
-
             parent = current;
             if (val < current.getVal()) {
                 current = current.getLeft();
                 if (current == null) {
-                    System.out.println("are you blind?" + val + "doesnt exist");
-                    return parent=null;
+                    System.out.println("sorry," + val + "doesnt exist");
+                    return false;
                 }
             } else {
                 current = current.getRight();
                 if (current == null) {
-                    System.out.println("are you blind?" + val + "doesnt exist");
-
-                    return parent=null;
-                }
+                    System.out.println("sorry" + val + "doesnt exist");
+                    return false;}
             }
         }
-        return parent;
     }
     public TreeNode deleteNode(TreeNode tree, int val) {
         TreeNode current = tree;
         TreeNode parent=null;
-        TreeNode a = new TreeNode();
 
 
         if (tree == null) {// tree is empty nothing to delete
-            System.out.println("tree is empty bro, the fuck are you trying to delete?");
+            System.out.println("tree is empty,nothing to delete");
         } else {
+            if ( searchTree(tree, val,parent) instanceof Boolean){
+                return tree;
+            }else {
+                parent = (TreeNode) searchTree(tree, val, parent);
+                if (parent != null) {
 
-            if(searchTree(tree,val)!=null){
-                if (current!=null)
-                {
-                    parent = searchTree(tree, val);
-                    if (parent.getLeft()!= null)
-                        if (parent.getLeft().getVal()==val)
-                            current = parent.getLeft();
-                    else
-                        current = parent.getRight();
+                    if (parent.getLeft() != null) {
+                            if (parent.getLeft().getVal() == val)
+                                current = parent.getLeft();
+                        }
+                    if(parent.getRight()!=null) {
+                        if (parent.getRight().getVal() == val)
+                            current = parent.getRight();
+                    }
+
+
                 }
-                else
-                    return tree;
-
-
             }
+
 
             if (current.getRight() == null && current.getLeft() == null) {//if deleting a leaf
                 if (parent == null) {
@@ -149,18 +145,22 @@ public class TreeVisService {
                     tree = tree.getRight();
 
                 }
-                return tree;
+
             }
             if ((current.getLeft() != null) && (current.getRight() != null)) {//node to delete has 2 children
-                System.out.println("entered delete");
                 if (parent == null) {//node to delete is the root
-                    TreeNode x = searchSmallestNode(current.getRight()).getLeft();
+                    TreeNode x = searchSmallestNode(current.getRight());
                     current.setVal(x.getVal());
-                    x = searchSmallestNode(current.getRight());
-                    x.setLeft(null);
+                    if(x.getLeft()!=null) {
+                        x.getLeft().setRight(x.getRight());
+                        current.setRight(x.getLeft());
+                    }
+                    else
+                        current.setRight(x.getRight());
+                    return tree;
                 } else {
-                    TreeNode omi = searchSmallestNode(current.getRight());
-                    if (omi == current.getRight()) {
+                    TreeNode treeNode = searchSmallestNode(current.getRight());
+                    if (treeNode == current.getRight()) {
                         if (current.getRight().getLeft() != null) {
                             current.setVal(current.getRight().getLeft().getVal());
                             current.getRight().setLeft(null);
@@ -169,14 +169,14 @@ public class TreeVisService {
                             current.setRight(current.getRight().getRight());
                         }
                     } else {
-                        current.setVal(omi.getLeft().getVal());
-                        omi.setLeft(omi.getLeft().getRight());
+                        current.setVal(treeNode.getLeft().getVal());
+                        treeNode.setLeft(treeNode.getLeft().getRight());
                     }
                 }
                 return tree;
             }
         }
-        return a;
+        return tree;
     }
 
     public boolean searchTreeDFS(TreeNode tree, int val, List<Integer> path) {

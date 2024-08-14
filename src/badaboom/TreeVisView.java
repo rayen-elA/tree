@@ -3,6 +3,7 @@ package badaboom;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Scanner;
 
 public class TreeVisView {
@@ -48,12 +49,18 @@ public class TreeVisView {
                 case 3:
                     System.out.println("give node value to search: ");
                     int value3=sc.nextInt();
-                    if(service.searchTreeDFS(tree,value3,list))
-                        System.out.println("the path is "+list);
+                    if(service.searchTreeDFS(tree,value3,list)) {
+                        System.out.println("the path is " + list);
+                        list.clear();
+                    }
                     else
-                        System.out.println("YNA3N DIN ZA7I YA BHIM E TREE 9ODEMEK");
+                        System.out.println("sorry,node doesnt exist.");
                     break;
-                default:return;
+                case 4:
+                    return;
+                default:
+                    System.out.println("please enter a number between 1 and 4");
+                    break;
             }
         }
     }
